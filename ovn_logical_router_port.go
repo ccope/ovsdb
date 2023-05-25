@@ -27,11 +27,11 @@ type OvnLogicalRouterPort struct {
 	HaChassisGroup []string          //`ovsdb:"ha_chassis_group"`
 	//Ipv6Prefix     []string          //`ovsdb:"ipv6_prefix"`
 	//Ipv6RaConfigs  map[string]string //`ovsdb:"ipv6_ra_configs"`
-	MAC      string            //`ovsdb:"mac"`
-	Name     string            //`ovsdb:"name"`
-	Networks []string          //`ovsdb:"networks"`
-	Options  map[string]string //`ovsdb:"options"`
-	Peer     []string          //`ovsdb:"peer"`
+	MAC      string   //`ovsdb:"mac"`
+	Name     string   //`ovsdb:"name"`
+	Networks []string //`ovsdb:"networks"`
+	//Options  map[string]string //`ovsdb:"options"`
+	Peer []string //`ovsdb:"peer"`
 }
 
 // GetLogicalRouterPorts returns a list of OVN logical router ports.

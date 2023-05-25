@@ -21,12 +21,15 @@ import (
 
 // OvnLogicalRouter holds basic information about a logical router.
 type OvnLogicalRouter struct {
-	UUID        string `json:"uuid" yaml:"uuid"`
-	Name        string `json:"name" yaml:"name"`
-	TunnelKey   uint64 `json:"tunnel_key" yaml:"tunnel_key"`
-	DatapathID  string
-	ExternalIDs map[string]string
-	Ports       []string `json:"ports" yaml:"ports"`
+	UUID        string            `json:"uuid" yaml:"uuid"` // _uuid
+	Name        string            `json:"name" yaml:"name"`
+	ExternalIDs map[string]string // external_ids
+	Ports       []string          `json:"ports" yaml:"ports"`
+	Copp        []string
+	Nat         []string // `ovsdb:"nat"`
+	//Options      map[string]string // `ovsdb:"options"`
+	Policies     []string // `ovsdb:"policies"`
+	StaticRoutes []string // `ovsdb:"static_routes"`
 }
 
 // GetLogicalRouters returns a list of OVN logical routers.
@@ -42,43 +45,43 @@ func (cli *OvnClient) GetLogicalRouters() ([]*OvnLogicalRouter, error) {
 		return nil, fmt.Errorf("%s: no router found", cli.Database.Northbound.Name)
 	}
 	for _, row := range result.Rows {
-		rt := &OvnLogicalRouter{}
-		if r, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
+		r := &OvnLogicalRouter{}
+		if res, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
 			continue
 		} else {
 			if dt != "string" {
 				continue
 			}
-			rt.UUID = r.(string)
+			r.UUID = res.(string)
 		}
-		if r, dt, err := row.GetColumnValue("name", result.Columns); err != nil {
+		if res, dt, err := row.GetColumnValue("name", result.Columns); err != nil {
 			continue
 		} else {
 			if dt != "string" {
 				continue
 			}
-			rt.Name = r.(string)
+			r.Name = res.(string)
 		}
-		if r, dt, err := row.GetColumnValue("ports", result.Columns); err != nil {
+		if res, dt, err := row.GetColumnValue("ports", result.Columns); err != nil {
 			continue
 		} else {
 			switch dt {
 			case "string":
-				rt.Ports = append(rt.Ports, r.(string))
+				r.Ports = append(r.Ports, res.(string))
 			case "[]string":
-				rt.Ports = r.([]string)
+				r.Ports = res.([]string)
 			default:
 				continue
 			}
 		}
-		if r, dt, err := row.GetColumnValue("external_ids", result.Columns); err != nil {
-			rt.ExternalIDs = make(map[string]string)
+		if res, dt, err := row.GetColumnValue("external_ids", result.Columns); err != nil {
+			r.ExternalIDs = make(map[string]string)
 		} else {
 			if dt == "map[string]string" {
-				rt.ExternalIDs = r.(map[string]string)
+				r.ExternalIDs = res.(map[string]string)
 			}
 		}
-		routers = append(routers, rt)
+		routers = append(routers, r)
 	}
 	// !TODO(ccope): What does this do for switches? Do we want an equivalent function for routers?
 	// Next, obtain a tunnel key for the datapath associated with the switch.
