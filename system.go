@@ -44,6 +44,26 @@ type OvsDaemon struct {
 	}
 }
 
+//// GetSystemID TODO
+//func (cli *OvnClient) GetSystemID() error {
+//	systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
+//	if err != nil {
+//		return err
+//	}
+//	cli.System.ID = systemID
+//	return nil
+//}
+
+//// GetSystemID TODO
+//func (cli *OvsClient) GetSystemID() error {
+//	systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
+//	if err != nil {
+//		return err
+//	}
+//	cli.System.ID = systemID
+//	return nil
+//}
+
 func getSystemID(filepath string) (string, error) {
 	var systemID string
 	file, err := os.Open(filepath)
@@ -95,7 +115,7 @@ func parseSystemInfo(result Result) (map[string]string, error) {
 		break
 	}
 	if _, exists := systemInfo["system-id"]; exists == false {
-		return systemInfo, fmt.Errorf("no 'system-id' found")
+		return systemInfo, fmt.Errorf("no 'system-id' found", nil)
 	}
 	requiredKeys := []string{"rundir", "hostname", "ovs_version", "db_version", "system_type", "system_version"}
 	for _, key := range requiredKeys {
@@ -108,60 +128,60 @@ func parseSystemInfo(result Result) (map[string]string, error) {
 
 // GetSystemInfo returns a hash containing system information, e.g. `system_id`
 // associated with the Open_vSwitch database.
-func (cli *OvnClient) GetSystemInfo() error {
-	//systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
-	//if err != nil {
-	//	return err
-	//}
-	//cli.System.ID = systemID
-	query := fmt.Sprintf("SELECT ovs_version, db_version, system_type, system_version, external_ids FROM %s", cli.Database.Vswitch.Name)
-	result, err := cli.Database.Vswitch.Client.Transact(cli.Database.Vswitch.Name, query)
-	if err != nil {
-		return fmt.Errorf("The '%s' query failed: %s", query, err)
-	}
-	if len(result.Rows) == 0 {
-		return fmt.Errorf("The '%s' query did not return any rows", query)
-	}
-	systemInfo, err := parseSystemInfo(result)
-	if err != nil {
-		return fmt.Errorf("The '%s' query returned results but erred: %s", query, err)
-	}
-	cli.System.ID = systemInfo["system-id"]
-	cli.System.RunDir = systemInfo["rundir"]
-	cli.System.Hostname = systemInfo["hostname"]
-	cli.System.Type = systemInfo["system_type"]
-	cli.System.Version = systemInfo["system_version"]
-	cli.Database.Vswitch.Version = systemInfo["ovs_version"]
-	cli.Database.Vswitch.Schema.Version = systemInfo["db_version"]
-	return nil
-}
+//func (cli *OvnClient) GetSystemInfo() error {
+//systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
+//if err != nil {
+//	return err
+//}
+//cli.System.ID = systemID
+//	query := fmt.Sprintf("SELECT ovs_version, db_version, system_type, system_version, external_ids FROM %s", cli.Database.Vswitch.Name)
+//	result, err := cli.Database.Vswitch.Client.Transact(cli.Database.Vswitch.Name, query)
+//	if err != nil {
+//		return fmt.Errorf("The '%s' query failed: %s", query, err)
+//	}
+//	if len(result.Rows) == 0 {
+//		return fmt.Errorf("The '%s' query did not return any rows", query)
+//	}
+//	systemInfo, err := parseSystemInfo(result)
+//	if err != nil {
+//		return fmt.Errorf("The '%s' query returned results but erred: %s", query, err)
+//	}
+//	cli.System.ID = systemInfo["system-id"]
+//	cli.System.RunDir = systemInfo["rundir"]
+//	cli.System.Hostname = systemInfo["hostname"]
+//	cli.System.Type = systemInfo["system_type"]
+//	cli.System.Version = systemInfo["system_version"]
+//	cli.Database.Vswitch.Version = systemInfo["ovs_version"]
+//	cli.Database.Vswitch.Schema.Version = systemInfo["db_version"]
+//	return nil
+//}
 
 // GetSystemInfo returns a hash containing system information, e.g. `system_id`
 // associated with the Open_vSwitch database.
-func (cli *OvsClient) GetSystemInfo() error {
-	//systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
-	//if err != nil {
-	//	return err
-	//}
-	//cli.System.ID = systemID
-	query := fmt.Sprintf("SELECT ovs_version, db_version, system_type, system_version, external_ids FROM %s", cli.Database.Vswitch.Name)
-	result, err := cli.Database.Vswitch.Client.Transact(cli.Database.Vswitch.Name, query)
-	if err != nil {
-		return fmt.Errorf("The '%s' query failed: %s", query, err)
-	}
-	if len(result.Rows) == 0 {
-		return fmt.Errorf("The '%s' query did not return any rows", query)
-	}
-	systemInfo, err := parseSystemInfo(result)
-	if err != nil {
-		return fmt.Errorf("The '%s' query returned results but erred: %s", query, err)
-	}
-	cli.System.ID = systemInfo["system-id"]
-	cli.System.RunDir = systemInfo["rundir"]
-	cli.System.Hostname = systemInfo["hostname"]
-	cli.System.Type = systemInfo["system_type"]
-	cli.System.Version = systemInfo["system_version"]
-	cli.Database.Vswitch.Version = systemInfo["ovs_version"]
-	cli.Database.Vswitch.Schema.Version = systemInfo["db_version"]
-	return nil
-}
+//func (cli *OvsClient) GetSystemInfo() error {
+//systemID, err := getSystemID(cli.Database.Vswitch.File.SystemID.Path)
+//if err != nil {
+//	return err
+//}
+//cli.System.ID = systemID
+//query := fmt.Sprintf("SELECT ovs_version, db_version, system_type, system_version, external_ids FROM %s", cli.Database.Vswitch.Name)
+//result, err := cli.Database.Vswitch.Client.Transact(cli.Database.Vswitch.Name, query)
+//if err != nil {
+//	return fmt.Errorf("The '%s' query failed: %s", query, err)
+//}
+//if len(result.Rows) == 0 {
+//	return fmt.Errorf("The '%s' query did not return any rows", query)
+//}
+//systemInfo, err := parseSystemInfo(result)
+//if err != nil {
+//	return fmt.Errorf("The '%s' query returned results but erred: %s", query, err)
+//}
+//cli.System.ID = systemInfo["system-id"]
+//cli.System.RunDir = systemInfo["rundir"]
+//cli.System.Hostname = systemInfo["hostname"]
+//cli.System.Type = systemInfo["system_type"]
+//cli.System.Version = systemInfo["system_version"]
+//cli.Database.Vswitch.Version = systemInfo["ovs_version"]
+//cli.Database.Vswitch.Schema.Version = systemInfo["db_version"]
+//return nil
+//}

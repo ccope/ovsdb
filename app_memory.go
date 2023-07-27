@@ -69,8 +69,8 @@ func (cli *OvnClient) GetAppMemoryMetrics(db string) (map[string]float64, error)
 		return getAppMemoryMetrics(db, cli.Database.Northbound.Socket.Control, cli.Timeout)
 	case "ovsdb-server-southbound":
 		return getAppMemoryMetrics(db, cli.Database.Southbound.Socket.Control, cli.Timeout)
-	case "ovsdb-server":
-		return getAppMemoryMetrics(db, cli.Database.Vswitch.Socket.Control, cli.Timeout)
+	//case "ovsdb-server":
+	//	return getAppMemoryMetrics(db, cli.Database.Vswitch.Socket.Control, cli.Timeout)
 	default:
 		return nil, fmt.Errorf("The '%s' database is unsupported for '%s'", db, cmd)
 	}
@@ -81,10 +81,10 @@ func (cli *OvsClient) GetAppMemoryMetrics(db string) (map[string]float64, error)
 	cli.updateRefs()
 	cmd := "memory/show"
 	switch db {
-	case "ovsdb-server":
-		return getAppMemoryMetrics(db, cli.Database.Vswitch.Socket.Control, cli.Timeout)
-	case "vswitchd-service":
-		return getAppMemoryMetrics(db, cli.Service.Vswitchd.Socket.Control, cli.Timeout)
+	//case "ovsdb-server":
+	//	return getAppMemoryMetrics(db, cli.Database.Vswitch.Socket.Control, cli.Timeout)
+	//case "vswitchd-service":
+	//	return getAppMemoryMetrics(db, cli.Service.Vswitchd.Socket.Control, cli.Timeout)
 	default:
 		return nil, fmt.Errorf("The '%s' database is unsupported for '%s'", db, cmd)
 	}
